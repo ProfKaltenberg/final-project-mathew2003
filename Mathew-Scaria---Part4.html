@@ -388,9 +388,9 @@ have children under 18)</p>
 ## Please cite as:</code></pre>
 <pre><code>##  Hlavac, Marek (2022). stargazer: Well-Formatted Regression and Summary Statistics Tables.</code></pre>
 <pre><code>##  R package version 5.2.3. https://CRAN.R-project.org/package=stargazer</code></pre>
-<pre class="r"><code>FinalData &lt;- read.csv(&quot;FinalProjectdataset.csv&quot;)
+<pre class="r"><code>FinalData &lt;- read.csv(&quot;FinalProjectdataset.csv&quot;) #giving my data a name
 
-head(FinalData)</code></pre>
+head(FinalData) #This lets me see the first couple rows of data</code></pre>
 <pre><code>##   fips_code    county_name state fmr_2bed vacancy_rate total_housing_units
 ## 1      1001 Autauga County    AL      977     8.928066               24731
 ## 2      1003 Baldwin County    AL     1206    26.358954              128518
@@ -534,20 +534,21 @@ summary(reg_preferred)</code></pre>
 <h2>5. Stargazer Table</h2>
 <p>The table below displays all three regressions side by side for easy
 comparison.</p>
-<pre class="r"><code>stargazer(reg_full, reg_filtered, reg_preferred,
+<pre class="r"><code>#This table lets me create a singular table that lets me see all three of my regressions
+#I used claude for this section to put the stargazer table together
+stargazer(reg_full, reg_filtered, reg_preferred,
           type             = &quot;html&quot;,
           title            = &quot;OLS Regression Results: Fair Market Rent (2-Bedroom)&quot;,
           dep.var.labels = &quot;2-Bedroom Fair Market Rent (USD)&quot;,
           covariate.labels = c(&quot;Vacancy Rate (%)&quot;,
                                &quot;Total Vacant Units&quot;,
-                               &quot;Median Income ($)&quot;,
+                               &quot;Median Income (USD)&quot;,
                                &quot;Log Median Income&quot;),
           column.labels    = c(&quot;Full Sample&quot;, &quot;High Income Counties&quot;, &quot;Preferred (Log Income)&quot;),
           omit.stat        = c(&quot;f&quot;, &quot;ser&quot;),
           digits           = 3,
           notes            = &quot;Data: HUD Fair Market Rent API and U.S. Census Bureau ACS 2023.&quot;,
-          notes.align      = &quot;l&quot;,
-          out              = &quot;regression_results.html&quot;)</code></pre>
+          notes.align      = &quot;l&quot;)</code></pre>
 <table style="text-align:center">
 <caption>
 <strong>OLS Regression Results: Fair Market Rent (2-Bedroom)</strong>
@@ -682,7 +683,7 @@ Total Vacant Units
 </tr>
 <tr>
 <td style="text-align:left">
-Median Income ()
+Median Income (USD)
 </td>
 <td>
 0.011<sup>***</sup>
@@ -889,6 +890,8 @@ Data: HUD Fair Market Rent API and U.S. Census Bureau ACS 2023.
 </td>
 </tr>
 </table>
+<pre class="r"><code>library(tinytex)</code></pre>
+<pre><code>## Warning: package &#39;tinytex&#39; was built under R version 4.5.3</code></pre>
 <hr />
 </div>
 
