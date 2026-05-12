@@ -1,8 +1,8 @@
 ---
 title: "FinalProject - Mathew Scaria"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 date: "2026-05-12"
 ---
 
@@ -98,10 +98,10 @@ The table below displays all three regressions side by side for easy comparison.
 #This table lets me create a singular table that lets me see all three of my regressions
 #I used claude for this section to put the stargazer table together
 stargazer(reg_full, reg_filtered, reg_preferred,
-          type             = "html",
+          type             = "latex",
           title            = "OLS Regression Results: Fair Market Rent (2-Bedroom)",
           dep.var.labels = "2-Bedroom Fair Market Rent (USD)",
-          covariate.labels = c("Vacancy Rate (%)",
+          covariate.labels = c("Vacancy Rate (Percent)",
                                "Total Vacant Units",
                                "Median Income (USD)",
                                "Log Median Income"),
