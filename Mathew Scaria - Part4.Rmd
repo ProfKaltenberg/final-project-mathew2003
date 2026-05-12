@@ -1,6 +1,8 @@
 ---
 title: "FinalProject - Mathew Scaria"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 date: "2026-05-12"
 ---
 
@@ -30,9 +32,9 @@ households_with_children (The number of families that have children under 18)
 library(dplyr)
 library(stargazer)
 
-FinalData <- read.csv("FinalProjectdataset.csv")
+FinalData <- read.csv("FinalProjectdataset.csv") #giving my data a name
 
-head(FinalData)
+head(FinalData) #This lets me see the first couple rows of data
 ```
 
 ```{r}
@@ -93,21 +95,25 @@ summary(reg_preferred)
 The table below displays all three regressions side by side for easy comparison.
 
 ```{r, results='asis'}
+#This table lets me create a singular table that lets me see all three of my regressions
+#I used claude for this section to put the stargazer table together
 stargazer(reg_full, reg_filtered, reg_preferred,
           type             = "html",
           title            = "OLS Regression Results: Fair Market Rent (2-Bedroom)",
           dep.var.labels = "2-Bedroom Fair Market Rent (USD)",
           covariate.labels = c("Vacancy Rate (%)",
                                "Total Vacant Units",
-                               "Median Income ($)",
+                               "Median Income (USD)",
                                "Log Median Income"),
           column.labels    = c("Full Sample", "High Income Counties", "Preferred (Log Income)"),
           omit.stat        = c("f", "ser"),
           digits           = 3,
           notes            = "Data: HUD Fair Market Rent API and U.S. Census Bureau ACS 2023.",
-          notes.align      = "l",
-          out              = "regression_results.html")
+          notes.align      = "l")
 
+```
+```{r}
+library(tinytex)
 ```
 
 ---
