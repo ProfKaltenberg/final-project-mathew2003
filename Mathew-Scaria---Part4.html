@@ -430,7 +430,7 @@ summary(select(FinalData, c(&#39;fmr_2bed&#39;, &#39;vacancy_rate&#39;, &#39;hou
 <h2>2. OLS Regression</h2>
 <p>This is my baseline OLS regression using all four variables on the
 full county-level dataset. I regress 2-bedroom Fair Market Rent on
-vacancy rate, total vacant units, and median income.</p>
+vacancy rate, total housing units, and median income.</p>
 <pre class="r"><code># OLS regression on the full dataset
 reg_full &lt;- lm(fmr_2bed ~ vacancy_rate + total_housing_units + median_income + households_with_children, data = FinalData)
 summary(reg_full)</code></pre>
@@ -461,7 +461,7 @@ summary(reg_full)</code></pre>
 <div id="filtered-regression-high-income-counties" class="section level2">
 <h2>3. Filtered Regression (High Income Counties)</h2>
 <p>Here I filter the dataset to only include counties where median
-household income is above $100,000. I want to see whether the
+household income is above $90,000. I want to see whether the
 relationship between vacancy rates and rent looks different in wealthier
 counties compared to the full sample.</p>
 <pre class="r"><code># Filter to high income counties only (median income above $90,000)
@@ -499,10 +499,10 @@ summary(reg_filtered)</code></pre>
 <div id="preferred-regression-log-transformed-income" class="section level2">
 <h2>4. Preferred Regression (Log-Transformed Income)</h2>
 <p>My preferred regression uses the full dataset but log-transforms
-median income. Income tends to have a non-linear relationship with rent
-— an extra dollar of income matters more at lower income levels than at
-higher ones. Log-transforming income captures this and typically
-improves model fit.</p>
+median income and rent. Income tends to have a non-linear relationship
+with rent — an extra dollar of income matters more at lower income
+levels than at higher ones. Log-transforming income captures this and
+typically improves model fit.</p>
 <pre class="r"><code># I logged income and fmr_2bed
 FinalData &lt;- mutate(FinalData, log_income = log(median_income), log_fmr = log(fmr_2bed))
 
