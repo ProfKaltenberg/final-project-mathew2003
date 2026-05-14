@@ -357,19 +357,22 @@ display: none;
 
 <div id="introduction" class="section level2">
 <h2>Introduction</h2>
-<p>Research Question: How do Vacancy Rates Affect Fair Market Rent?
-Motivation: This is an important research topic because vacancy rates
+<p>Research Question: How do Vacancy Rates Affect Fair Market Rent?</p>
+<p>Motivation: This is an important research topic because vacancy rates
 and fair market rent are closely tied to housing affordability, urban
 development, and economic stability. Understanding this relationship can
 help policymakers, landlords, and renters better understand how housing
 markets function.</p>
 <p><strong>Variables:</strong></p>
-<p>Dependent Variable: fmr_2bed (Rent for a 2 bedroom rental unit)
-Independent Variable: vacancy_rate (The percent of rental units that are
-vacant for rent) Controls: total_housing_units (Total number of rental
-units this includes apartments, houses, etc) median_income (People’s
-Income in dollars) households_with_children (The number of families that
-have children under 18)</p>
+<p>Dependent Variable: fmr_2bed (Rent for a 2 bedroom rental unit)</p>
+<p>Independent Variable: vacancy_rate (The percent of rental units that
+are vacant for rent)</p>
+<p>Controls:</p>
+<p>total_housing_units (Total number of rental units this includes
+apartments, houses, etc)</p>
+<p>median_income (People’s Income in dollars)</p>
+<p>households_with_children (The number of families that have children
+under 18)</p>
 <hr />
 </div>
 <div id="importing-my-data" class="section level2">
@@ -500,34 +503,34 @@ median income. Income tends to have a non-linear relationship with rent
 — an extra dollar of income matters more at lower income levels than at
 higher ones. Log-transforming income captures this and typically
 improves model fit.</p>
-<pre class="r"><code># Create a log income variable
-FinalData &lt;- mutate(FinalData, log_income = log(median_income))
+<pre class="r"><code># I logged income and fmr_2bed
+FinalData &lt;- mutate(FinalData, log_income = log(median_income), log_fmr = log(fmr_2bed))
 
 # Preferred regression with log-transformed income
-reg_preferred &lt;- lm(fmr_2bed ~ vacancy_rate + total_housing_units + log_income + households_with_children, data = FinalData)
+reg_preferred &lt;- lm(log_fmr ~ vacancy_rate + total_housing_units + log_income + households_with_children, data = FinalData)
 summary(reg_preferred)</code></pre>
 <pre><code>## 
 ## Call:
-## lm(formula = fmr_2bed ~ vacancy_rate + total_housing_units + 
-##     log_income + households_with_children, data = FinalData)
+## lm(formula = log_fmr ~ vacancy_rate + total_housing_units + log_income + 
+##     households_with_children, data = FinalData)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -1667.65  -119.49   -41.75    72.95  1950.42 
+## -1.26972 -0.10525 -0.02761  0.07927  0.89876 
 ## 
 ## Coefficients:
 ##                            Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)              -5.721e+03  1.504e+02 -38.039  &lt; 2e-16 ***
-## vacancy_rate              8.570e-01  3.724e-01   2.301   0.0214 *  
-## total_housing_units       6.650e-04  1.266e-04   5.253  1.6e-07 ***
-## log_income                6.012e+02  1.347e+01  44.631  &lt; 2e-16 ***
-## households_with_children  5.922e-04  7.520e-04   0.787   0.4311    
+## (Intercept)               2.147e-01  1.178e-01   1.823   0.0684 .  
+## vacancy_rate              5.390e-04  2.917e-04   1.847   0.0648 .  
+## total_housing_units       7.502e-07  9.917e-08   7.565 5.04e-14 ***
+## log_income                5.967e-01  1.055e-02  56.543  &lt; 2e-16 ***
+## households_with_children -1.266e-06  5.891e-07  -2.148   0.0318 *  
 ## ---
 ## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
 ## 
-## Residual standard error: 202.8 on 3206 degrees of freedom
-## Multiple R-squared:  0.5427, Adjusted R-squared:  0.5421 
-## F-statistic: 951.2 on 4 and 3206 DF,  p-value: &lt; 2.2e-16</code></pre>
+## Residual standard error: 0.1589 on 3206 degrees of freedom
+## Multiple R-squared:  0.6161, Adjusted R-squared:  0.6156 
+## F-statistic:  1286 on 4 and 3206 DF,  p-value: &lt; 2.2e-16</code></pre>
 <hr />
 </div>
 <div id="stargazer-table" class="section level2">
@@ -539,12 +542,13 @@ comparison.</p>
 stargazer(reg_full, reg_filtered, reg_preferred,
           type             = &quot;html&quot;,
           title            = &quot;OLS Regression Results: Fair Market Rent (2-Bedroom)&quot;,
+          dep.var.caption  = &quot;&quot;,
           dep.var.labels = &quot;2-Bedroom Fair Market Rent (USD)&quot;,
-          covariate.labels = c(&quot;Vacancy Rate (%)&quot;,
-                               &quot;Total Vacant Units&quot;,
+          covariate.labels = c(&quot;Vacancy Rate (Percent)&quot;,
+                               &quot;total housing units&quot;,
                                &quot;Median Income (USD)&quot;,
                                &quot;Log Median Income&quot;),
-          column.labels    = c(&quot;Full Sample&quot;, &quot;High Income Counties&quot;, &quot;Preferred (Log Income)&quot;),
+          column.labels    = c(&quot;Full Sample&quot;, &quot;High Income Counties&quot;, &quot;Log Income and log Rent&quot;),
           omit.stat        = c(&quot;f&quot;, &quot;ser&quot;),
           digits           = 3,
           notes            = &quot;Data: HUD Fair Market Rent API and U.S. Census Bureau ACS 2023.&quot;,
@@ -560,21 +564,11 @@ stargazer(reg_full, reg_filtered, reg_preferred,
 <tr>
 <td style="text-align:left">
 </td>
-<td colspan="3">
-<em>Dependent variable:</em>
-</td>
-</tr>
-<tr>
-<td>
-</td>
-<td colspan="3" style="border-bottom: 1px solid black">
-</td>
-</tr>
-<tr>
-<td style="text-align:left">
-</td>
-<td colspan="3">
+<td colspan="2">
 2-Bedroom Fair Market Rent (USD)
+</td>
+<td>
+log_fmr
 </td>
 </tr>
 <tr>
@@ -587,7 +581,7 @@ Full Sample
 High Income Counties
 </td>
 <td>
-Preferred (Log Income)
+Log Income and log Rent
 </td>
 </tr>
 <tr>
@@ -609,7 +603,7 @@ Preferred (Log Income)
 </tr>
 <tr>
 <td style="text-align:left">
-Vacancy Rate (%)
+Vacancy Rate (Percent)
 </td>
 <td>
 1.323<sup>***</sup>
@@ -618,7 +612,7 @@ Vacancy Rate (%)
 4.872<sup>**</sup>
 </td>
 <td>
-0.857<sup>**</sup>
+0.001<sup>*</sup>
 </td>
 </tr>
 <tr>
@@ -631,7 +625,7 @@ Vacancy Rate (%)
 (2.192)
 </td>
 <td>
-(0.372)
+(0.0003)
 </td>
 </tr>
 <tr>
@@ -646,7 +640,7 @@ Vacancy Rate (%)
 </tr>
 <tr>
 <td style="text-align:left">
-Total Vacant Units
+total housing units
 </td>
 <td>
 0.001<sup>***</sup>
@@ -655,7 +649,7 @@ Total Vacant Units
 0.003<sup>***</sup>
 </td>
 <td>
-0.001<sup>***</sup>
+0.00000<sup>***</sup>
 </td>
 </tr>
 <tr>
@@ -668,7 +662,7 @@ Total Vacant Units
 (0.0004)
 </td>
 <td>
-(0.0001)
+(0.00000)
 </td>
 </tr>
 <tr>
@@ -725,7 +719,7 @@ Log Median Income
 <td>
 </td>
 <td>
-601.187<sup>***</sup>
+0.597<sup>***</sup>
 </td>
 </tr>
 <tr>
@@ -736,7 +730,7 @@ Log Median Income
 <td>
 </td>
 <td>
-(13.470)
+(0.011)
 </td>
 </tr>
 <tr>
@@ -760,7 +754,7 @@ households_with_children
 -0.009<sup>***</sup>
 </td>
 <td>
-0.001
+-0.00000<sup>**</sup>
 </td>
 </tr>
 <tr>
@@ -773,7 +767,7 @@ households_with_children
 (0.002)
 </td>
 <td>
-(0.001)
+(0.00000)
 </td>
 </tr>
 <tr>
@@ -797,7 +791,7 @@ Constant
 80.672
 </td>
 <td>
--5,720.726<sup>***</sup>
+0.215<sup>*</sup>
 </td>
 </tr>
 <tr>
@@ -810,7 +804,7 @@ Constant
 (177.812)
 </td>
 <td>
-(150.392)
+(0.118)
 </td>
 </tr>
 <tr>
@@ -852,7 +846,7 @@ R<sup>2</sup>
 0.375
 </td>
 <td>
-0.543
+0.616
 </td>
 </tr>
 <tr>
@@ -866,7 +860,7 @@ Adjusted R<sup>2</sup>
 0.365
 </td>
 <td>
-0.542
+0.616
 </td>
 </tr>
 <tr>
