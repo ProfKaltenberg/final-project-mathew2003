@@ -52,7 +52,7 @@ summary(select(FinalData, c('fmr_2bed', 'vacancy_rate', 'households_with_childre
 
 ## 2. OLS Regression
 
-This is my baseline OLS regression using all four variables on the full county-level dataset. I regress 2-bedroom Fair Market Rent on vacancy rate, total vacant units, and median income.
+This is my baseline OLS regression using all four variables on the full county-level dataset. I regress 2-bedroom Fair Market Rent on vacancy rate, total housing units, and median income.
 
 ```{r}
 # OLS regression on the full dataset
@@ -64,7 +64,7 @@ summary(reg_full)
 
 ## 3. Filtered Regression (High Income Counties)
 
-Here I filter the dataset to only include counties where median household income is above $100,000. I want to see whether the relationship between vacancy rates and rent looks different in wealthier counties compared to the full sample.
+Here I filter the dataset to only include counties where median household income is above $90,000. I want to see whether the relationship between vacancy rates and rent looks different in wealthier counties compared to the full sample.
 
 ```{r}
 # Filter to high income counties only (median income above $90,000)
@@ -83,7 +83,7 @@ summary(reg_filtered)
 
 ## 4. Preferred Regression (Log-Transformed Income)
 
-My preferred regression uses the full dataset but log-transforms median income. Income tends to have a non-linear relationship with rent — an extra dollar of income matters more at lower income levels than at higher ones. Log-transforming income captures this and typically improves model fit.
+My preferred regression uses the full dataset but log-transforms median income and rent. Income tends to have a non-linear relationship with rent — an extra dollar of income matters more at lower income levels than at higher ones. Log-transforming income captures this and typically improves model fit.
 
 ```{r}
 # I logged income and fmr_2bed
